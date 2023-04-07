@@ -6,6 +6,7 @@ This ROS Stack includes code and tools useful to users of SimLab Co., Ltd.'s All
 
 **Note:** This stack works with Allegro Hands v3.0 and up by befault.
 See the end of this document for how to use this package with an older Allegro Hand.
+**Also Note:** The offical repo only supports ROS Melodic/Kinetic, this repo has been made adjustments for Noetic visualization.
 
 
 For more information visit SimLab's [Allegro Hand wiki](http://www.simlab.co.kr/AllegroHand/wiki).<br>
