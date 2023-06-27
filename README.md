@@ -1,4 +1,4 @@
-# allegro_hand_ros
+# allegro_hand_ros_Noetic (with Python lib)
 
 > For the gripper motion control, this node first needs to subscribe the arm when arm is settled. 
 > ( when the arm reaches the object location, start to grasp; 
