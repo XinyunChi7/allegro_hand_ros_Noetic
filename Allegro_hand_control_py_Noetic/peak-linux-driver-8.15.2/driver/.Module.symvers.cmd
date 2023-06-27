@@ -1,0 +1,1 @@
+cmd_/home/serene/allegro-hand-ros/peak-linux-driver-8.15.2/driver/Module.symvers := sed 's/\.ko$$/\.o/' /home/serene/allegro-hand-ros/peak-linux-driver-8.15.2/driver/modules.order | scripts/mod/modpost -m -a  -o /home/serene/allegro-hand-ros/peak-linux-driver-8.15.2/driver/Module.symvers -e -i Module.symvers   -T -

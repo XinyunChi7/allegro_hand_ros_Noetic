@@ -1,0 +1,6 @@
+allegro_hand_keyboard
+/home/serene/allegro-hand-ros/devel/.private/allegro_hand_keyboard/cmake.lock /home/serene/allegro-hand-ros/devel/./cmake.lock
+/home/serene/allegro-hand-ros/devel/.private/allegro_hand_keyboard/lib/allegro_hand_keyboard/allegro_hand_keyboard /home/serene/allegro-hand-ros/devel/lib/allegro_hand_keyboard/allegro_hand_keyboard
+/home/serene/allegro-hand-ros/devel/.private/allegro_hand_keyboard/lib/pkgconfig/allegro_hand_keyboard.pc /home/serene/allegro-hand-ros/devel/lib/pkgconfig/allegro_hand_keyboard.pc
+/home/serene/allegro-hand-ros/devel/.private/allegro_hand_keyboard/share/allegro_hand_keyboard/cmake/allegro_hand_keyboardConfig.cmake /home/serene/allegro-hand-ros/devel/share/allegro_hand_keyboard/cmake/allegro_hand_keyboardConfig.cmake
+/home/serene/allegro-hand-ros/devel/.private/allegro_hand_keyboard/share/allegro_hand_keyboard/cmake/allegro_hand_keyboardConfig-version.cmake /home/serene/allegro-hand-ros/devel/share/allegro_hand_keyboard/cmake/allegro_hand_keyboardConfig-version.cmake

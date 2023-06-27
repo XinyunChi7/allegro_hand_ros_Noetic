@@ -1,0 +1,6 @@
+allegro_hand
+/home/serene/allegro-hand-ros/devel/.private/allegro_hand/cmake.lock /home/serene/allegro-hand-ros/devel/./cmake.lock
+/home/serene/allegro-hand-ros/devel/.private/allegro_hand/lib/allegro_hand/allegro_hand_uname /home/serene/allegro-hand-ros/devel/lib/allegro_hand/allegro_hand_uname
+/home/serene/allegro-hand-ros/devel/.private/allegro_hand/lib/pkgconfig/allegro_hand.pc /home/serene/allegro-hand-ros/devel/lib/pkgconfig/allegro_hand.pc
+/home/serene/allegro-hand-ros/devel/.private/allegro_hand/share/allegro_hand/cmake/allegro_handConfig.cmake /home/serene/allegro-hand-ros/devel/share/allegro_hand/cmake/allegro_handConfig.cmake
+/home/serene/allegro-hand-ros/devel/.private/allegro_hand/share/allegro_hand/cmake/allegro_handConfig-version.cmake /home/serene/allegro-hand-ros/devel/share/allegro_hand/cmake/allegro_handConfig-version.cmake

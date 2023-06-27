@@ -1,0 +1,5 @@
+epfl_allegro_launchers
+/home/serene/allegro-hand-ros/devel/.private/epfl_allegro_launchers/cmake.lock /home/serene/allegro-hand-ros/devel/./cmake.lock
+/home/serene/allegro-hand-ros/devel/.private/epfl_allegro_launchers/lib/pkgconfig/epfl_allegro_launchers.pc /home/serene/allegro-hand-ros/devel/lib/pkgconfig/epfl_allegro_launchers.pc
+/home/serene/allegro-hand-ros/devel/.private/epfl_allegro_launchers/share/epfl_allegro_launchers/cmake/epfl_allegro_launchersConfig-version.cmake /home/serene/allegro-hand-ros/devel/share/epfl_allegro_launchers/cmake/epfl_allegro_launchersConfig-version.cmake
+/home/serene/allegro-hand-ros/devel/.private/epfl_allegro_launchers/share/epfl_allegro_launchers/cmake/epfl_allegro_launchersConfig.cmake /home/serene/allegro-hand-ros/devel/share/epfl_allegro_launchers/cmake/epfl_allegro_launchersConfig.cmake

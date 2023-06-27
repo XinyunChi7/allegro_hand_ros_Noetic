@@ -1,0 +1,1 @@
+cmd_/home/serene/allegro-hand-ros/peak-linux-driver-8.15.2/driver/modules.order := {   echo /home/serene/allegro-hand-ros/peak-linux-driver-8.15.2/driver/pcan.ko; :; } | awk '!x[$$0]++' - > /home/serene/allegro-hand-ros/peak-linux-driver-8.15.2/driver/modules.order

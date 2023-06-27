@@ -1,0 +1,1 @@
+cmd_/home/serene/allegro-hand-ros/peak-linux-driver-8.15.2/driver/pcan.ko := ld -r  -m elf_x86_64 -z noexecstack   --build-id=sha1  -T scripts/module.lds -o /home/serene/allegro-hand-ros/peak-linux-driver-8.15.2/driver/pcan.ko /home/serene/allegro-hand-ros/peak-linux-driver-8.15.2/driver/pcan.o /home/serene/allegro-hand-ros/peak-linux-driver-8.15.2/driver/pcan.mod.o;  true
