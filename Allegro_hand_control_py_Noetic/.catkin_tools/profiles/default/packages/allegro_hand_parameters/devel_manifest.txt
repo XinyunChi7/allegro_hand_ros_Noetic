@@ -1,5 +1,0 @@
-allegro_hand_parameters
-/home/serene/allegro-hand-ros/devel/.private/allegro_hand_parameters/cmake.lock /home/serene/allegro-hand-ros/devel/./cmake.lock
-/home/serene/allegro-hand-ros/devel/.private/allegro_hand_parameters/lib/pkgconfig/allegro_hand_parameters.pc /home/serene/allegro-hand-ros/devel/lib/pkgconfig/allegro_hand_parameters.pc
-/home/serene/allegro-hand-ros/devel/.private/allegro_hand_parameters/share/allegro_hand_parameters/cmake/allegro_hand_parametersConfig-version.cmake /home/serene/allegro-hand-ros/devel/share/allegro_hand_parameters/cmake/allegro_hand_parametersConfig-version.cmake
-/home/serene/allegro-hand-ros/devel/.private/allegro_hand_parameters/share/allegro_hand_parameters/cmake/allegro_hand_parametersConfig.cmake /home/serene/allegro-hand-ros/devel/share/allegro_hand_parameters/cmake/allegro_hand_parametersConfig.cmake

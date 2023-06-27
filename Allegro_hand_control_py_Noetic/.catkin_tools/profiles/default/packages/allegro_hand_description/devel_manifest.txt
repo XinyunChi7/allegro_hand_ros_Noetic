@@ -1,7 +1,0 @@
-allegro_hand_description
-/home/serene/allegro-hand-ros/devel/.private/allegro_hand_description/cmake.lock /home/serene/allegro-hand-ros/devel/./cmake.lock
-/home/serene/allegro-hand-ros/devel/.private/allegro_hand_description/lib/allegro_hand_description/detect_pcan.py /home/serene/allegro-hand-ros/devel/lib/allegro_hand_description/detect_pcan.py
-/home/serene/allegro-hand-ros/devel/.private/allegro_hand_description/lib/allegro_hand_description/cmake.lock /home/serene/allegro-hand-ros/devel/lib/allegro_hand_description/cmake.lock
-/home/serene/allegro-hand-ros/devel/.private/allegro_hand_description/lib/pkgconfig/allegro_hand_description.pc /home/serene/allegro-hand-ros/devel/lib/pkgconfig/allegro_hand_description.pc
-/home/serene/allegro-hand-ros/devel/.private/allegro_hand_description/share/allegro_hand_description/cmake/allegro_hand_descriptionConfig.cmake /home/serene/allegro-hand-ros/devel/share/allegro_hand_description/cmake/allegro_hand_descriptionConfig.cmake
-/home/serene/allegro-hand-ros/devel/.private/allegro_hand_description/share/allegro_hand_description/cmake/allegro_hand_descriptionConfig-version.cmake /home/serene/allegro-hand-ros/devel/share/allegro_hand_description/cmake/allegro_hand_descriptionConfig-version.cmake
