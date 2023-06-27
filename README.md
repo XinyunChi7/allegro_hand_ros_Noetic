@@ -1,155 +1,221 @@
-allegro_hand_ros beta2
-======================
+# allegro_hand_ros
 
-This ROS Stack includes code and tools useful to users of SimLab Co., Ltd.'s Allegro Hand.<br>
-
-
-**Note:** This stack works with Allegro Hands v3.0 and up by befault.
-See the end of this document for how to use this package with an older Allegro Hand.
-**Also Note:** The offical repo only supports ROS Melodic/Kinetic, this repo has been made adjustments for Noetic visualization.
+> For the gripper motion control, this node first needs to subscribe the arm when arm is settled. 
+> ( when the arm reaches the object location, start to grasp; 
+> when the arm reaches the patient location, open the hand;
+>  default to set the hand syatus is open)
 
 
-For more information visit SimLab's [Allegro Hand wiki](http://www.simlab.co.kr/AllegroHand/wiki).<br>
-ROS specific information can be found on the [ROS wiki](http://www.ros.org/wiki/allegro_hand_ros).
+> When the grasp action is completed, tell the chasis so that it can move to the patient location.
+> when open hand action( finger release) is completed, tell the chasis to move to its default location.
+
+>for the code please go to src/allegro_hand/src/allegro_hand/example_allegro_lib.py
+and please check the new example.
 
 
-**Announcement:** The next major release of this stack will include the integration of certain sensor systems
-
-**Note:** If controlling multiple allegro hands at once, please see the appropriate section below.
 
 
-Contents
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Allegro Hand ROS
+================================
+
+This is the official release to control Allegro Hand with ROS Kinetic.
+Mostly, it is based on the old release of Allegro Hand ros package and the interfaces 
+and controllers have been improved and rewritten much by Felix Duballet from EPFL. 
+Thank you for the contribution.
+
+You can find old release of the [hand ros package][1].
+[1]: https://github.com/simlabrobotics/allegro_hand_ros_v4
+
+It improves significantly upon the old release, simplifies the launch file structure,
+updates the package/node names to
+have a more consistent structure, improves the build process by creating a
+common driver, introduces an AllegroNode C++ class that reduces the amount of
+duplicated code. It also provides a python library that can control the hand
+directly.
+
+It also provides the BHand library directly in this package (including both
+32-bit and 64-bit versions, though 32-bit systems will need to update the
+symlink manually).
+
+At this point no effort has been made to be backwards compatible. Some of the
+non-compatible changes between the two version are:
+
+ - Put all of the controllers into one *package* (allegro_hand_controllers) and
+   made each controller a different node (allegro_node_XXXX): grasp, pd, velsat,
+   and sim.
+ - Single launch file with arguments instead of multiple launch files with
+   repeated code.
+ - Both the parameter and description files are now ROS packages, so that
+   `rospack find` works with them.
+ - These packages will likely not work with pre-hydro versions (only tested on
+   ROS Kinetic so far, please let me know if this works on other distributions).
+ - Added a torque controller (from @nisommer).
+ - Added a 'simulated' pass-through hand controller that sets the joint state to
+   the desired joint state.
+
+Launch file instructions:
+------------------------
+
+There is now a single file,
+[allegro_hand.launch](allegro_hand_controllers/launch/allegro_hand.launch)
+that starts the hand. It takes many arguments, but at a minimum you must specify
+the handedness:
+
+    roslaunch allegro_hand_controllers allegro_hand.launch HAND:=right
+
+Optional (recommended) arguments:
+
+          NUM:=0|1|...
+          ZEROS:=/path/to/zeros_file.yaml
+          CONTROLLER:=grasp|pd|velsat|torque|sim
+          RESPAWN:=true|false   Respawn controller if it dies.
+          KEYBOARD:=true|false  (default is true)
+          AUTO_CAN:=true|false  (default is true)
+          CAN_DEVICE:=/dev/pcanusb1 | /dev/pcanusbNNN  (ls -l /dev/pcan* to see open CAN devices)
+          VISUALIZE:=true|false  (Launch rviz)
+          JSP_GUI:=true|false  (show the joint_state_publisher for *desired* joint angles)
+
+Note on `AUTO_CAN`: There is a nice script `detect_pcan.py` which automatically
+finds an open `/dev/pcanusb` file. If instead you specify the can device
+manually (`CAN_DEVICE:=/dev/pcanusbN`), make sure you *also* specify
+`AUTO_CAN:=false`. Obviously, automatic detection cannot work with two hands.
+
+The second launch file is for visualization, it is included in
+`allegro_hand.launch` if `VISUALIZE:=true`. Otherwise, it can be useful to run
+it separately (with `VISUALIZE:=false`), for example if you want to start rviz separately
+(and keep it running):
+
+    roslaunch allegro_hand_controllers allegro_viz.launch HAND:=right
+
+Note that you should also specify the hand `NUM` parameter in the viz launch if
+the hand number is not zero.
+
+Packages
 --------
-* **allegro_hand_common:** Contains files common to multiple Allegro Hand controllers like CAN communication code.
-  **Note:** libBHand (SimLab/KITECH's Allegro Hand Grasping Library) has been moved as a separate library available in SimLab's [Allegro Hand wiki](http://www.simlab.co.kr/AllegroHand/wiki).
 
-* **allegro_hand_controllers:** Contains example controllers. 
-    * PD Joint Space control
-    * Velocity Saturation Joint Space Control
-    * Grasping Library Interface
-    
-   Please refer to PD Joint Space control folder for easily testing your own control code.
-  
-  **Note:** The PD and Grasp controllers, along with the Velocity Saturation controller, include two control loop timing examples each. One method uses a timer interrupt while the other loops. Please research the benefits and downfalls of each of these on ROS.org.
-  
-  **Note:** The prefered sampling method is utilizing the Hand's own real time clock running @ 333Hz by polling the CAN communication. In fact, ROS's inturrupt/sleep combination might cause instability in CAN communication resulting unstable hand motions. The solution is to have the main control loop polling the readDevice(). readDevice() will return when 16 encoder values are availbe in the CAN bus. Allegro Hand automatically writes 16 encoder values in every 1/333 sec. Notice that this polling method provides the stable sampling rate of 333 Hz!!!
-  
-* **allegro_hand_keyboard:** Contains code for the keyboard node used to command different grasps. All commands are available when running the allegro_hand_core_grasp and only few commands are available when running allegro_hand_core_pd or running allegro_hand_core_pd controllers.
+ * **allegro_hand** A python client that enables direct control of the hand in
+                    python code.
+ * **allegro_hand_driver** Driver for talking with the allegro hand.
+ * **allegro_hand_controllers** Different nodes that actually control the hand.
+ The AllegroNode class handles all the generic driver comms, each class then
+ implements `computeDesiredTorque` differently (and can have various topic
+ subscribers):
+   * grasp: Apply various pre-defined grasps, including gravity compensation.
+   * pd: Joint space control: save and hold positions.
+   * velsat: velocity saturation joint space control (supposedly experimental)
+   * torque: Direct torque control.
+   * sim: Just pass desired joint states through as current joint states.
+ * **allegro_hand_description** xacro descriptions for the kinematics of the
+     hand, rviz configuration and meshes.
+ * **allegro_hand_keyboard** Node that sends the commanded grasps. All commands
+     are available with the grasp controller, only some are available with the
+     other controllers.
+ * **allegro_hand_parameters** All necessary parameters for loading the hand:
+   * gains_pd.yaml: Controller gains for PD controller.
+   * gains_velSat.yaml: Controller gains and parameters for velocity saturation
+           controller.
+   * initial_position.yaml: Home position for the hand.
+   * zero.yaml: Offset and servo directions for each of the 16 joints, and some
+           meta information about the hand.
+   * zero_files/ Zero files for all hands.
+ * **bhand** Library files for the predefined grasps, available in 32 and 64 bit
+     versions. 64 bit by default, update symlink for 32 bit.
 
-* **allegro_hand_description:** Contains the robot description URDF for the Allegro Hand. Currently only the right hand is complete.
-      
-  
-* **parameters:**
- * **gains_pd.yaml:** Contains PD gains used in allegro_hand_core_pd and allegro_hand_core_pd_slp.
- * **gains_velSat.yaml:** Contains PD gains and velocity limits used in allegro_hand_core_velSat
- * **initial_position.yaml:** Contains the initial position for the joints to got to when joint space controllers like *pd*, *pd_slp* and *velSat* are used. By default, this is the Allegro Hand *Home position*.
- * **zero.yaml:** Offsets and directions for each of the 16 joints (Read in by the CAN communication code) Also includes Allegro Hand info specific to each hand like version number and serial number.
- **Note:** The inclusion of "which_hand" (right/left) in this file has been deprecated. This must be specified as an argument when launching any of the allegro_hand* launchers.
-  
-  **Note:** If any of the gains files or the initial positions file are missing, the two joint space controllers (*pd* and *velSat*) will load default values sepcified in the srespective allegroNode.cpp file. If zero.yaml is not loaded, the Allegro Hand will shut down automatically.
-  
-Launchers
----------
-  * **allegro_hand.launch:** Launches Allegro Hand with specified controller (default = grasp). Also launches keyboard controller and rviz visualizer.
-  * **allegro_hand_noRviz.launch:** Launches Allegro Hand with specified controller (default = grasp). Also launches keyboard controller and DOES NOT launch rviz visualizer.  
-  * **allegro_hand_joint_gui.launch:** Launches Allegro Hand with PD controller by defauly. Also launches a GUI interface for controlling each joint within its limits and rviz visualizer.
-  * **allegro_hand_joint_gui_virtual.launch:** Launches Allegro Hand kinematic model. Also launches a GUI interface for controlling each joint within its limits and rviz visualizer.
-  
-**Note:** All launch files (including virtual and actual hand) have the following arguments that can be specified:
-      
-  * **HAND:=** (Used to specify which hand is being controlled)
-    * right
-    * left
-    * **Note:** There is no default. This arg must be specified.
-    
-  * **NUM:=** (Used to enumerate the hands when multiple will be controlled at once / Prevents naming and data conflicts)
-    * 0 (default)
-    * Any Integer (1, 2, 3, ... )   
-      
-  * **GROOVY:=** (Specify ROS distro)
-    * false (default, used for ROS Fuerte)
-    * true  
-    
-**Note:** Also, the following arguments can be specified for actual hardware launch file:
+Note on polling (from Wonik Robotics): The preferred sampling method is utilizing the
+Hand's own real time clock running @ 333Hz by polling the CAN communication
+(polling = true, default). In fact, ROS's interrupt/sleep combination might
+cause instability in CAN communication resulting unstable hand motions.
 
-  * **CONTROLLER:=** (Specify the controller / Grasp library or simple joint space controller)
-    * grasp (default)
-    * pd
-    * velSat
 
-  * **pollling:=** (Specify if CAN communication is done by polling)
-    * true (default)
-    * false
-     
-  * **ZEROS:=** (Specify the encoder/motor offsets and directions parameter file)
-    * zero.yaml (default)
-    * path to zero*.yaml file (ex. "parameters/zero_files/zero_SAH020CR020.yaml")
-    
-  * **CAN_CH:=** (Specify the CAN channel to which the hand is connected)
-    * /dev/pcan32 (default)
-    * another PEAK CAN Channel (see in /dev/*)
-     
-    
+Useful Links
+------------
 
-<br>
-**Examples:**<br>
-* To launch the default grasp controller w/o polling for the right Allegro Hand using Fuerte you can use either of the following two commands:
+ * [Allegro Hand wiki](http://wiki.wonikrobotics/AllegroHand/wiki).
+ * [ROS wiki for original package](http://www.ros.org/wiki/allegro_hand_ros).
 
-```
-roslaunch allegro_hand.launch CONTROLLER:=grasp HAND:=right GROOVY:=false polling:=false
-```
-```
-roslaunch allegro_hand.launch
-```  
- 
-<br> 
-* For the PD controller w/ polling on a right hand using Groovy:
 
-```
-roslaunch allegro_hand.launch HAND:=right CONTROLLER:=pd GROOVY:=true polling:=true
-```   
-
-<br> 
-* Using velocity saturation controller on a left, CAN Channel 1 and the offsets, etc. for Hand SAH020CR020:
-
-```
-roslaunch allegro_hand.launch CONTROLLER:=velSat HAND:=left CAN_CH:=1 ZEROS:=parameters/zero_files/zero_SAH020CR020.yaml
-```   
-    
 Controlling More Than One Hand
 ------------------------------
 
-*When running more than one hand using ROS, you must specify the number of the hand when launching.
+When running more than one hand using ROS, you must specify the number of the
+hand when launching.
 
-```
-  roslaunch allegro_hand.launch HAND:=right ZEROS:=parameters/zero0.yaml NUM:=0 CAN_CH:=/dev/pcan0 
-  roslaunch allegro_hand.launch HAND:=left  ZEROS:=parameters/zero1.yaml NUM:=1 CAN_CH:=/dev/pcan1
-```    
-    
-Thanks
-------    
-Please be advised, this is the first beta release of the ROS stack for SimLab's Allegro Hand platform. There will likely be bugs and there is much room for improvement. 
+    roslaunch allegro_hand.launch HAND:=right ZEROS:=parameters/zero0.yaml NUM:=0 CAN_DEVICE:=/dev/pcan0 AUTO_CAN:=false
 
-Please share you improvements to the code included in this release. Also, we would love to include the interesting controllers you may create as part of the package. Please keep an open line of contact as we continue to develop this software.
-
-Thanks.
-
-K.C. Chang <kcchang@simlab.co.kr>
+    roslaunch allegro_hand.launch HAND:=left  ZEROS:=parameters/zero1.yaml NUM:=1 CAN_DEVICE:=/dev/pcan1 AUTO_CAN:=false
 
 
+Known Issues:
+-------------
 
-<br>
- 
-**Note:** As stated above, control loops utilizing both timer callbacks and ROS' Rate object are included. Generally, the timer callback is more reliable as it will run the control code in a new thread if the previous iteration fails to end within the given crol period. The rate object, aling with a spinOnce() and a sleep, generally does a fine job but some anomolies have been recognized where the loop toaks much too long and remains blocked until finishing. Using the rate/sleep method allows for simpler code. However, due to Allegro Hand's own real time clock sampling rate (@333Hz) to write 16 encoder values to the CAN bus, interrupt/rate/sleep can cause conflicts in the CAN communication resulting unstable motions. Finally, we mention our preferred solution one more time. The solution is to have the main control loop polling the CAN-readDevice(). readDevice() will return when 16 encoder values are availbe and read in the CAN bus. Since Allegro Hand automatically writes 16 encoder values in every 1/333 sec, this polling method provides the stable sampling rate of 333 Hz!!! 
+While all parameters defining the hand's motor/encoder directions and offsets
+fall under the enumerated "allegroHand_#" namespaces, the parameter
+"robot_description" defining the kinematic structure and joint limits remains
+global. When launching a second hand, this parameter is overwritten. I have yet
+to find a way to have a separate enumerated "robot_decription" parameter for
+each hand. If you have any info on this, please advise.
 
-Loop:
-* writeTorque()
-* readEncoder()
-* userInterface()
-* computeTorque()
- 
-For Allegro Hand v3.0
----------------------
 
-TODO
-Adapt to new versions of Ubuntu and ROS. Too many!!! :)
+Installing the PCAN driver
+--------------------------
+
+Before using the hand, you must install the pcan drivers. This assumes you have
+a peak-systems pcan to usb adapter.
+
+1. Install these packages
+
+    sudo apt-get install libpopt-dev ros-kinetic-libpcan
+
+2. Download latest drivers: http://www.peak-system.com/fileadmin/media/linux/index.htm#download
+
+Install the drivers:
+
+    make clean; make NET=NO_NETDEV_SUPPORT
+    sudo make install
+    sudo /sbin/modprobe pcan
+
+Test that the interface is installed properly with:
+
+     cat /proc/pcan
+
+You should see some stuff streaming.
+
+When the hand is connected, you should see pcanusb0 or pcanusb1 in the list of
+available interfaces:
+
+    ls -l /dev/pcan*
+
+If you do not see any available files, you may need to run:
+
+    sudo ./driver/pcan_make_devices 2
+
+from the downloaded pcan folder: this theoretically creates the devices files if
+the system has not done it automatically.
+
+3. Build the sources
+
+    catkin_make
+    source devel/setup.bash
+
+4. quick start
+    cd src/allegro_hand_controllers/launch
+    roslaunch allegro_hand.launch HAND:=right
+

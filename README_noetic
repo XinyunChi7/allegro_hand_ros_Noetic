@@ -1,0 +1,21 @@
+Adjustments made to run Allegro_hand (Melodic) in Noetic:
+
+Clone from: 
+https://github.com/yias/allegro-hand-ros/tree/melodic 
+
+With reference to:
+https://github.com/felixduvallet/allegro-hand-ros
+
+1. Before run 'roslaunch allegro_hand allegro_hand.launch HAND:=right CONTROLLER:=sim',
+   Add the below lines for robot description import in allegro_hand.launch:
+   
+<param name="/robot_description" textfile="$(find allegro_hand_description)/allegro_hand_description_$(arg HAND).urdf"/>
+<param name="/allegroHand_$(arg NUM)/robot_description" textfile="$(find allegro_hand_description)/allegro_hand_description_$(arg HAND).urdf"/>
+
+
+2. Rename 'allegro_hand_keyboard.cpp' into 'allegro_hand_keyboard_node',
+   Add '#!/usr/bin/env hbcxx' on the top to run c/cpp file as a script.
+   (Or add '#!/usr/bin/bash')
+   
+ 
+3. 
